@@ -55,6 +55,7 @@ export const handleSocketConnection = (io) => {
           const chatRoomRef = db.collection("chat_rooms").doc(chatRoomId);
           await chatRoomRef.update({
             messages: adminSdk.firestore.FieldValue.arrayUnion(payload),
+            lastMessage: payload,
           });
 
           io.to(chatRoomId).emit("receiveMessage", payload);
