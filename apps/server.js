@@ -4,6 +4,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import { handleSocketConnection } from "./handlers/socketHandlers.js";
+import { handleNotificationSocket } from "./handlers/notificationHandlers.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ const io = new Server(httpServer, {
 });
 
 handleSocketConnection(io);
+handleNotificationSocket(io);
 
 app.get("/", (req, res) => {
   res.send("Socket server is running");

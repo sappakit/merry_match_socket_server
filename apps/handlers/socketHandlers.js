@@ -9,10 +9,9 @@ export const handleSocketConnection = (io) => {
 
     // Map to store user_id -> socket.id mapping
     socket.on("registerUser", (userId) => {
-      console.log("server", userId);
       if (userId) {
         userSocketMap.set(userId, socket.id);
-        console.log(`User ${userId} is registered with socket ${socket.id}`);
+        console.log(`Chat: User ${userId} is registered with socket ${socket.id}`);
       }
     });
 
