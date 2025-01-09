@@ -22,8 +22,35 @@ const io = new Server(httpServer, {
   path: "/socket.io",
 });
 
-handleSocketConnection(io);
-handleNotificationSocket(io);
+// Define userSocketMap locally
+const userSocketMap = new Map();
+
+// Centralized Socket.IO Connection Handling
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  // Centralized registerUser event
+  socket.on("registerUser", (userId) => {
+    if (userId) {
+      userSocketMap.set(userId, socket.id);
+      console.log(`User ${userId} registered on socket ${socket.id}`);
+    }
+  });
+
+  // Pass socket and io to specific feature handlers
+  handleSocketConnection(io, socket);
+  handleNotificationSocket(io, socket, userSocketMap);
+
+  // Handle user disconnection
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+    userSocketMap.forEach((value, key) => {
+      if (value === socket.id) {
+        userSocketMap.delete(key);
+      }
+    });
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("Socket server is running");
