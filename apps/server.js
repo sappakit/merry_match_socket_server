@@ -29,21 +29,21 @@ const userSocketMap = new Map();
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Centralized registerUser event
   socket.on("registerUser", (userId) => {
     if (userId) {
       userSocketMap.set(userId, socket.id);
+
       console.log(`User ${userId} registered on socket ${socket.id}`);
     }
   });
 
-  // Pass socket and io to specific feature handlers
-  handleSocketConnection(io, socket);
+  handleSocketConnection(io, socket, userSocketMap);
   handleNotificationSocket(io, socket, userSocketMap);
 
   // Handle user disconnection
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
+
     userSocketMap.forEach((value, key) => {
       if (value === socket.id) {
         userSocketMap.delete(key);
