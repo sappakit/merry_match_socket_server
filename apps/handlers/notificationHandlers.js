@@ -94,6 +94,11 @@ export const handleNotificationSocket = (io, socket, userSocketMap) => {
         const userId = newNotification.user_master_id;
 
         await emitNotifications(io, userId, userSocketMap);
+
+        const socketId = userSocketMap.get(userId);
+        if (socketId) {
+          io.to(socketId).emit("updateMatches");
+        }
       }
     )
     .subscribe();
@@ -111,6 +116,11 @@ export const handleNotificationSocket = (io, socket, userSocketMap) => {
         const recipientId = newNotification.user_receiver_id;
 
         await emitNotifications(io, recipientId, userSocketMap);
+
+        const socketId = userSocketMap.get(recipientId);
+        if (socketId) {
+          io.to(socketId).emit("updateChats");
+        }
       }
     )
     .subscribe();

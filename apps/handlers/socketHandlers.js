@@ -81,6 +81,8 @@ export const handleSocketConnection = (io, socket, userSocketMap) => {
         // Emit the message to users in the chat room
         io.to(chatRoomId).emit("receiveMessage", payload);
 
+        io.to(chatRoomId).emit("updateChats");
+
         // Notification part
         // Fetch chat_id and participants from the "chats" table
         const chatQuery = `
